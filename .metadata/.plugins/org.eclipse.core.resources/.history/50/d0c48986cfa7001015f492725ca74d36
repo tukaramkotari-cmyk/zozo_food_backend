@@ -1,0 +1,17 @@
+package com.zozofood.dao;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.model.Item;
+
+public interface ItemRepository extends JpaRepository<Item, Long> {
+
+//	void saveAll(List<CreateItemRequestDTO> itemRequestDtoList);
+	
+	Optional<Item> findByItemName(String itemName, Long restaurantId);
+
+}

@@ -1,0 +1,115 @@
+package com.zozofood.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.zozofood.dao.OrderRepository;
+import com.zozofood.dto.OrderItemResponseDto;
+import com.zozofood.dto.OrderRequestDto;
+import com.zozofood.dto.OrderResponseDto;
+import com.zozofood.entity.Order;
+import com.zozofood.entity.OrderItems;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class OrderServiceImp  implements OrderService {
+	
+	public static final BigDecimal TAX_RATE = BigDecimal.valueOf(0.08);
+	
+	private final OrderRepository orderRepository;
+	
+	public OrderServiceImp(OrderRepository orderRepository) {
+		this.orderRepository = orderRepository;
+	}
+
+	@Override
+	public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
+		
+		 Order order = new Order();
+	        order.setUserId(orderRequestDto.getUserId());
+	        order.setStatus(Order.OrderStatus.PENDING);
+	        order.setPaymentStatus(Order.PaymentStatus.PENDING);
+	        order.setOrderDate(LocalDateTime.now());
+	        order.setRecipientName(orderRequestDto.getRecipentname());
+	        order.setContactEmail(orderRequestDto.getContactEmail());
+	        order.setShippingAddress(orderRequestDto.getShippingAddress());
+	        order.setContactPhone(orderRequestDto.getContactPhone());
+		
+	       List<OrderItems> orderItems = orderRequestDto.getOrderItems().stream().map(itemDto -> {
+	            OrderItems item = new OrderItems();
+	            item.setMenuItemId(itemDto.getItemId());
+	            item.setQuantityOrdered(itemDto.getQuantity());
+	            item.setSubtotalPrice(
+	            		calculateSubtotalPrice(itemDto.getItemId(), itemDto.getQuantity()));
+	            return item;
+	        }).collect(Collectors.toList());
+	       
+	       order.setOrderItemList(orderItems);
+	        BigDecimal subtotal = orderItems.stream()
+	                .map(OrderItems::getSubtotalPrice)
+	                .reduce(BigDecimal.ZERO, BigDecimal::add);
+	        
+	        BigDecimal tax = subtotal.multiply(TAX_RATE);
+
+	        order.setTotalAmount(subtotal.add(tax));
+
+	        Order savedOrder = orderRepository.save(order);
+	        log.info("Order created: " + savedOrder);
+
+	        // send order notification
+	        OrderResponseDto orderResponse = orderToOrderResponse(savedOrder);
+//	        sendOrderNotification(orderResponse);
+
+		 
+	        return orderResponse;
+	}
+
+	private OrderResponseDto orderToOrderResponse(Order savedOrder) {
+		OrderResponseDto responseDto = new OrderResponseDto();
+		responseDto.setOrderId(savedOrder.getOrderId());
+		responseDto.setUserId(savedOrder.getUserId());
+		responseDto.setRecipientName(savedOrder.getRecipientName());
+		responseDto.setContactphone(savedOrder.getContactPhone());
+		responseDto.setOrderStatus(savedOrder.getStatus().name());
+		responseDto.setOrderDate(savedOrder.getOrderDate());
+		responseDto.setTotalAmount(savedOrder.getTotalAmount());
+		responseDto.setPaymentStatus(savedOrder.getPaymentStatus().name());
+		responseDto.setDeliveryAddress(savedOrder.getShippingAddress());
+		
+		List<OrderItemResponseDto> itemDtos = savedOrder.getOrderItemList().stream().map(item -> {
+			OrderItemResponseDto itemDto = new OrderItemResponseDto();
+			itemDto.setItemId(item.getMenuItemId());
+			itemDto.setQuantity(item.getQuantityOrdered());
+			itemDto.setItemSubtotal(item.getSubtotalPrice());
+			return itemDto;
+		}).collect(Collectors.toList());
+		
+		responseDto.setOrderItems(itemDtos);
+		// Assuming restaurant name is fetched from another service or repository
+		// responseDto.setRestaurantName(restaurantName); 
+
+		return responseDto;
+		
+	}
+
+	private BigDecimal calculateSubtotalPrice(Long itemId, int quantity) {
+		   BigDecimal price = restaurantClient.getPriceByMenuItemId(itemId);
+	        return price.multiply(BigDecimal.valueOf(quantity));
+	}
+
+	@Override
+	public OrderResponseDto getOrderById(Long orderId) {
+		
+		orderRepository.findById(orderId).orElseThrow(() ->  new OrderNotFoundException("Order not found with id: " + orderId));
+		
+		 
+		return null;
+	}
+
+}

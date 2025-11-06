@@ -1,0 +1,28 @@
+package com.zozofood.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderItems {
+	
+	private Long id;
+	
+	private Long itemId;			// reference to MenuItem
+	
+	private String itemName;	// name of the item
+	
+	private int quantity;		// quantity ordered
+	
+	private Double price;		// price per item
+	
+	private Double totalPrice;	// total price for this item (quantity * price)
+
+}

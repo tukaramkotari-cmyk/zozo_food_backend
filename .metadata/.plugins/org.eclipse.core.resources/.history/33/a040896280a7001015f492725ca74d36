@@ -1,0 +1,63 @@
+package com.zozofood.service;
+
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.builder.RestaurantCreationBuilder;
+import com.zozofood.dao.ItemRepository;
+import com.zozofood.dao.RestaurantRepository;
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.model.Item;
+import com.zozofood.model.Restaurant;
+
+@Service
+public class RestaurnatServiceImp implements RestaurantService {
+
+	private final RestaurantRepository restaurantRepository;
+	
+	private final ItemRepository itemRepository;
+
+	public RestaurnatServiceImp(RestaurantRepository restaurantRepository, ItemRepository itemRepository) {
+		this.restaurantRepository = restaurantRepository;
+		this.itemRepository = itemRepository;
+	}
+
+	@Override
+	public RestaurantCreationResponseDto createRestaurant(RestaurantCreationRequestDto restaurantCreationRequestDto) {
+		RestaurantCreationResponseDto responseDto = new RestaurantCreationResponseDto();
+		
+		Restaurant savedRestaurant = restaurantRepository.save(RestaurantCreationBuilder
+				.BuildRestaurantFromRestaurantCreationRequestDto(restaurantCreationRequestDto));
+		
+		return  new RestaurantCreationResponseDto(savedRestaurant.getRestaurantiId(), savedRestaurant.getRestaurantName());
+	}
+
+	@Override
+	public void addItemByRestaurantId(Long restaurantId, List<CreateItemRequestDTO> itemRequestDtoList) {
+		Restaurant restarunatexist = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+		if(restarunatexist != null) {
+			 
+			for (CreateItemRequestDTO createItemRequestDTO : itemRequestDtoList) {
+				Item item = new Item();
+				BeanUtils.copyProperties(createItemRequestDTO, item);
+				restaurantRepository.saveAll(item);
+				
+			}
+		}
+		
+		
+		
+	}
+
+	@Override
+	public List<ItemResponseDto> getItemsByRestaurantId(Long restaurantId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

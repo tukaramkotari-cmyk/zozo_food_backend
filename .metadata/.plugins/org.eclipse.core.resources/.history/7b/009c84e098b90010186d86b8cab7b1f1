@@ -1,0 +1,32 @@
+package com.zozofood.builder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.zozofood.dto.UserRequestDto;
+import com.zozofood.dto.UserResponseDto;
+import com.zozofood.entity.User;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class UserBuilder {
+
+	private final PasswordEncoder passwordencoder;
+	
+	public UserResponseDto toUserResponseDto(UserRequestDto requestDto) {
+		return UserResponseDto.builder()
+				.userId(requestDto.getUserId())
+				.userName(requestDto.getUserName())
+				.email(requestDto.getEmail())
+				.address(requestDto.getAddress())
+				.roles(requestDto.getRoles())
+				.isActive(requestDto.isActive())
+				.build();
+		
+	}
+	
+	
+	public User toUserEntity(UserRequestDto requestDto) {
+		
+	}
+}

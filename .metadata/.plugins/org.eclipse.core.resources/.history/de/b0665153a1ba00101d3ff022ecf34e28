@@ -1,0 +1,24 @@
+package com.zozofood.service;
+
+import org.springframework.stereotype.Service;
+
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.ProfileResponseDto;
+
+@Service
+public class ProfileServiceImp implements ProfileService {
+	
+	private final UserRepository userRepository;
+	
+	
+	public ProfileServiceImp(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	@Override
+	public ProfileResponseDto getUserProfile(long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

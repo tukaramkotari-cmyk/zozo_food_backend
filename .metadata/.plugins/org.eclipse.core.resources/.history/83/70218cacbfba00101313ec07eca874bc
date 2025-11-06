@@ -1,0 +1,5 @@
+package com.zozofood.config;
+
+public class JwtUtil {
+
+}

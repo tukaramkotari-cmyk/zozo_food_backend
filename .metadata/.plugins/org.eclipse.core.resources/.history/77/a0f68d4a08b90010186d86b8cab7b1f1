@@ -1,0 +1,5 @@
+package com.zozofood.entity;
+
+public class User {
+
+}

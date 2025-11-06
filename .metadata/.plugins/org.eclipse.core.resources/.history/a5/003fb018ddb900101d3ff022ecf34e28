@@ -1,0 +1,9 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.UserResponseDto;
+
+public interface ProfileService {
+
+
+
+}

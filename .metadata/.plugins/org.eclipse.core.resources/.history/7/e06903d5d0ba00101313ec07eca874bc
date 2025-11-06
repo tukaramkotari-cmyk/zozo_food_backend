@@ -1,0 +1,12 @@
+package com.zozofood.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@resquestMapping("/auth")
+public class AuthController {
+	
+	private final AuthService authService;
+	private final jwtUtil jwtUtil;
+
+}

@@ -1,0 +1,18 @@
+package com.zozofood.dto;
+
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class itemRequestDto {
+	
+	private String itemName;
+	
+	private String itemDescription;
+	
+	private double itemPrice;
+	
+	private String itemCategory;
+
+}

@@ -1,0 +1,20 @@
+package com.zozofood.dto;
+
+import com.zozofood.model.Address;
+
+public class RestaurantRequestDto {
+	
+	private String restaurantName;
+	
+	private Address restaurantAddress;
+	
+	private String restaurantPhone;
+	
+	private String restaurantEmail;
+		
+	private String restaurantOpeningHours;
+	
+
+	
+
+}

@@ -1,0 +1,22 @@
+package com.zozofood.service;
+
+import java.util.List;
+
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+
+
+public interface RestaurantService {
+	
+	RestaurantCreationResponseDto createRestaurant(RestaurantCreationRequestDto restaurantCreationRequestDto);
+	
+	void addItemByRestaurantId(Long restaurantId, List<CreateItemRequestDTO> itemRequestDtoList);
+	
+	List<ItemResponseDto> getItemsByRestaurantId(Long restaurantId);
+	
+	
+	
+
+}

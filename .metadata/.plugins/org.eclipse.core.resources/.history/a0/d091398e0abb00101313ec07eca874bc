@@ -1,0 +1,16 @@
+package com.zozofood.client;
+
+import java.math.BigDecimal;
+
+import org.springframework.cloud.openfeign.FeignClient;
+
+@FeignClient(name = "RestaurantManagment")
+public interface RestaurantClient {
+
+	static BigDecimal getItemPriceById(Long itemId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+}

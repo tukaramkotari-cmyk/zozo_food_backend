@@ -1,0 +1,13 @@
+package com.zozofood;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RestaurantManagmentApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OrderManagmentApplication.class, args);
+	}
+
+}

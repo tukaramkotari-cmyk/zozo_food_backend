@@ -1,0 +1,27 @@
+package com.zozofood.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.dto.RestaurantResponseDTO;
+import com.zozofood.model.Restaurant;
+
+
+public interface RestaurantService {
+	
+	RestaurantCreationResponseDto createRestaurant(RestaurantCreationRequestDto restaurantCreationRequestDto);
+
+	RestaurantResponseDTO getRestaurantById(Long restaurantId);
+
+	Page<RestaurantResponseDTO> searchRestaurants(String keyword, PageRequest pagination);
+	
+	
+	
+	
+	
+	
+	
+
+}

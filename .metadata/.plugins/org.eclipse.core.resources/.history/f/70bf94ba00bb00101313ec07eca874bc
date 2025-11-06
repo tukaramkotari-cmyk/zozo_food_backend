@@ -1,0 +1,11 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.OrderRequestDto;
+import com.zozofood.dto.OrderResponseDto;
+
+public interface OrderService {
+
+	OrderResponseDto createOrder(OrderRequestDto orderRequestDto);
+
+}
+

@@ -1,0 +1,16 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.ProfileResponseDto;
+import com.zozofood.dto.ProfileUpdateReqDto;
+
+import jakarta.validation.Valid;
+
+public interface ProfileService {
+
+	ProfileResponseDto getUserProfile(long userId);
+
+	ProfileResponseDto updateUserProfile(long userId, @Valid ProfileUpdateReqDto profileUpdateReqDto);
+
+
+
+}

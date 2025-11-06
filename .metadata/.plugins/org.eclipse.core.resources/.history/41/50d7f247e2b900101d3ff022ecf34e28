@@ -1,0 +1,23 @@
+package com.zozofood.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import com.zozofood.dto.UserRequestDto;
+import com.zozofood.dto.UserResponseDto;
+
+public interface UserService {
+
+	UserResponseDto createUser(UserRequestDto userRequestDto);
+
+	UserResponseDto getUserById(Long id);
+
+	UserResponseDto getUserByUsername(String username);
+
+	Page<UserResponseDto> getAllUsers(PageRequest pageable);
+
+	Page<UserResponseDto> getAllActiveUsers(PageRequest pageable);
+
+	
+
+}

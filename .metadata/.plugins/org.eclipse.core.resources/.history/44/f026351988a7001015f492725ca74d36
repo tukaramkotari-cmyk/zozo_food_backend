@@ -1,0 +1,5 @@
+package com.zozofood.exception;
+
+public class RestaurantNotFoundException extends Exception {
+
+}

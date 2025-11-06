@@ -1,0 +1,53 @@
+package com.zozofood.entity;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "orders")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Order {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	private Long customerId;
+	
+	private Long restaurantId;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "orderItem_id")
+	private List<OrderItems> items; 			// all order items
+	
+	private String status;		 				// e.g., "PENDING", "COMPLETED", "CANCELLED"
+	
+	private Timestamp orderCreatedAt;
+	
+	private Address deliveryAddress;			// delivery address
+	
+	private int totalItems;
+	
+	private Double totalOrderPrice;
+	
+	
+	
+
+}

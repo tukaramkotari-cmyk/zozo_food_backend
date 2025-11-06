@@ -1,0 +1,16 @@
+package com.zozofood.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+
+public interface ItemService {
+	
+	List<ItemResponseDto> getItemsByRestaurantId(Long restaurantId);
+
+	Map<String, String> createItemByRestaurantId(Long restaurantId, List<CreateItemRequestDTO> itemRequestDtoList);
+
+	double getItemPriceById(Long itemid);
+}

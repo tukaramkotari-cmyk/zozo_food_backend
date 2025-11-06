@@ -1,0 +1,14 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.UserRequestDto;
+import com.zozofood.dto.UserResponseDto;
+
+public interface UserService {
+
+	UserResponseDto createUser(UserRequestDto userRequestDto);
+
+	UserResponseDto getUserById(Long id);
+
+	
+
+}

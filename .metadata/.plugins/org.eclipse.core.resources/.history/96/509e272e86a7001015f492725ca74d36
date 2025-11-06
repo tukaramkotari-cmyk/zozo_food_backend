@@ -1,0 +1,67 @@
+package com.zozofood.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.service.ItemService;
+import com.zozofood.service.RestaurantService;
+
+
+@RestController
+@RequestMapping("/restaurant")
+public class RestaurantController {
+	
+	
+	private final RestaurantService restaurantService;
+	private final ItemService itemService;
+	
+	public RestaurantController(RestaurantService restaurantService, ItemService itemService) {
+		this.restaurantService = restaurantService;
+		this.itemService = itemService;
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<RestaurantCreationResponseDto> addRestaurant(@RequestBody RestaurantCreationRequestDto restaurantCreationRequestDto) {
+		
+		RestaurantCreationResponseDto restaurantCreationResponse = restaurantService.createRestaurant(restaurantCreationRequestDto);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCreationResponse);
+		
+	}
+	
+	
+	@PostMapping("/additembyrestaurantid/{restaurantId}")
+	public ResponseEntity<Object> addItem(@PathVariable Long restaurantId, @RequestBody List<CreateItemRequestDTO> itemRequestDTOList) {
+		try {
+			itemService.addItemByRestaurantId(restaurantId, itemRequestDTOList);		
+			return ResponseEntity.status(HttpStatus.CREATED).body("Items added successfully");
+			
+		} catch (RestaurantNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+		
+	}
+	
+	@GetMapping("itemsbyrestaurantid/{restaurantId}")
+	public ResponseEntity<List<ItemResponseDto>> getItemsByRestaurantId(@PathVariable Long restaurantId) {
+		
+		
+		return  ;
+	}
+	
+	
+	
+
+}

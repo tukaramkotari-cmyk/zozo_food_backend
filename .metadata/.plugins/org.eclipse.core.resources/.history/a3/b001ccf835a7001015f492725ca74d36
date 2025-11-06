@@ -1,0 +1,9 @@
+package com.zozofood.service;
+
+
+
+public interface RestaurantService {
+	
+	void createRestaurant();
+
+}

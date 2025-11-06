@@ -1,0 +1,22 @@
+package com.zozofood.builder;
+
+import java.util.List;
+
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.model.Item;
+
+public class CreateItemRequestBuilder {
+	
+	public static List<Item> buildItemFromCreateItemRequestDTO(List<CreateItemRequestDTO>  createItemRequestDTOList) {
+		list<Item> items =  new ArrayList<>();
+		
+		for(Item item : createItemRequestDTO) {
+			
+			
+		}
+		
+		return ;
+		
+	}
+
+}

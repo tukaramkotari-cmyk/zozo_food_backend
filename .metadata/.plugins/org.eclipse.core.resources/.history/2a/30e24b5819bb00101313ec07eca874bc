@@ -1,0 +1,5 @@
+package com.zozofood.client;
+
+public class UserClient {
+
+}

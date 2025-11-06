@@ -1,0 +1,12 @@
+package com.zozofood.client;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.zozofood.dto.UserResponseDto;
+
+public interface UserClient {
+	
+	ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id);
+
+}

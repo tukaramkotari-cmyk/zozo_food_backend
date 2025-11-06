@@ -1,0 +1,5 @@
+package com.zozofood.filter;
+
+public class JwtFilter {
+
+}

@@ -1,0 +1,172 @@
+package com.zozofood.service;
+
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.builder.UserBuilder;
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.UserRequestDto;
+import com.zozofood.dto.UserResponseDto;
+import com.zozofood.entity.User;
+import com.zozofood.exceprion.UserAlreadyExistException;
+import com.zozofood.exceprion.UserNotFoundException;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class UserServiceImp implements UserService {
+
+	private final UserRepository userRepository;
+//	private final PasswordEncoder passwordEncoder;
+
+	public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+//		this.passwordEncoder = passwordEncoder;
+	}
+
+	
+	public UserResponseDto createUser(UserRequestDto userRequestDto) {
+
+		validateNewUser(userRequestDto);
+
+		User user = UserBuilder.toUserEntity(userRequestDto);
+		user.setActive(true);
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			user.setRoles(Set.of("ROLE_USER"));
+		}
+
+		userRepository.save(user);
+		return UserBuilder.toUserResponseDto(user);
+
+	}
+
+	private void validateNewUser(UserRequestDto userRequestDto) {
+		 if (userRepository.findByUsernameAndIsActiveTrue(userRequestDto.getUserName()).isPresent()) {
+	            throw new UserAlreadyExistException("Username is already taken");
+	        }
+	        if (userRepository.findByUsernameAndIsActiveTrue(userRequestDto.getEmail()).isPresent()) {
+	            throw new UserAlreadyExistException("Email is already in use");
+	        }
+	}
+
+
+	@Override
+	public UserResponseDto getUserById(Long id) {
+		User user = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("User not found with id: "+id));
+		return UserBuilder.toUserResponseDto(user);
+		
+	}
+
+
+	@Override
+	public UserResponseDto getUserByUsername(String username) {
+		User user = userRepository.findByUsernameAndIsActiveTrue(username)
+				.orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+		return UserBuilder.toUserResponseDto(user);
+	}
+
+
+	@Override
+	public Page<UserResponseDto> getAllUsers(PageRequest pageable) {
+		return  userRepository.findAll(pageable).map( user -> UserBuilder.toUserResponseDto(user));
+		
+	}
+
+
+	@Override
+	public Page<UserResponseDto> getAllActiveUsers(PageRequest pageable) {
+		return userRepository.findByIsActiveTrue(pageable).map( user -> UserBuilder.toUserResponseDto(user));
+	}
+
+
+//	@Override
+//	public UserResponseDto updateUserById(Long userId, UserRequestDto userRequestDto) {
+//		User existingUser = userRepository.findById(userId)
+//				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+//		
+//		if(!existingUser.isActive()) {
+//				throw new UserNotFoundException("Cannot update inactive user with id: " + userId);
+//		}
+//		
+//		validateUpdatedUser(existingUser, userRequestDto);
+//		updateEntity(existingUser, userRequestDto);
+//		userRepository.save(existingUser);
+//		return UserBuilder.toUserResponseDto(existingUser);
+//		
+//	}
+	
+//	public void updateEntity(User user, UserRequestDto userRequestDto) {
+//        user.setUsername(userRequestDto.getUserName());
+//        user.setEmail(userRequestDto.getEmail());
+//        user.setAddress(userRequestDto.getAddress());
+//        if (userRequestDto.getRoles() != null && !userRequestDto.getRoles().isEmpty()) {
+//            user.setRoles(userRequestDto.getRoles());
+//        }
+//        if (userRequestDto.getPassword() != null && !userRequestDto.getPassword().isEmpty()) {
+//            user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+//        }
+//        if (userRequestDto.isActive() != user.isActive()) {
+//            user.setActive(userRequestDto.isActive());
+//        }
+//    }
+
+
+	private void validateUpdatedUser(User existingUser, UserRequestDto userRequestDto) {
+		  if (!existingUser.getUsername().equals(userRequestDto.getUserName()) &&
+	                userRepository.existsByUsernameAndIsActiveTrue(userRequestDto.getUserName())) {
+	            throw new UserAlreadyExistException("Username already exists :" + userRequestDto.getUserName());
+	        }
+	        if (!existingUser.getEmail().equals(userRequestDto.getEmail()) &&
+	                userRepository.existsByEmailAndIsActiveTrue(userRequestDto.getEmail())) {
+	            throw new UserAlreadyExistException("Email already exists :" + userRequestDto.getEmail());
+	        }
+		
+	}
+
+
+	@Override
+	public void deactivateUserById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+		user.setActive(false);
+		userRepository.save(user);
+		
+	}
+
+
+	@Override
+	public void reactivateUserById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+		user.setActive(true);
+		userRepository.save(user);
+		
+	}
+
+
+	@Override
+	@Transactional
+	public void deleteUserById(Long id) {
+		try {
+			User userActive = userRepository.findByUserIdAndIsActiveTrue(id);
+			if (userActive == null) {
+				throw new UserNotFoundException("Active user not found with id: " + id);
+			}
+			userRepository.deleteByUserId(id);
+		}catch (Exception e) {
+//			logger.error("Error deleting user with id: " + id + " - " + e.getMessage());
+//			Logger.error("Error deleting user with id: " + id + " - " + e.getMessage());
+			throw new UserNotFoundException("User not found with id: " + id);
+		}
+		
+		
+	} 
+	
+	
+
+}

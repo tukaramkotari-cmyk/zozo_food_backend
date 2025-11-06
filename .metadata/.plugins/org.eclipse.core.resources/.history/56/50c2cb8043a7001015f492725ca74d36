@@ -1,0 +1,14 @@
+spring.application.name=RestaurantManagment
+
+server.port = 8081
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+spring.datasource.url = jdbc:mysql://localhost:3306/zozofoods
+spring.datasource.username = root
+spring.datasource.password = root
+
+
+spring.jpa.hibernate.ddl-auto = create
+spring.jpa.show-sql = true
+logging.level.org.springframework.web=DEBUG
+
+

@@ -1,0 +1,9 @@
+package com.zozofood.service;
+
+import com.zozofood.model.Restaurant;
+
+public interface RestaurantService {
+	
+	 createRestaurant(Restaurant restaurant);
+
+}

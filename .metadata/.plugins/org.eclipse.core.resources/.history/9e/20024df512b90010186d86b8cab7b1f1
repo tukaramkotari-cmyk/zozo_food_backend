@@ -1,0 +1,8 @@
+package com.zozofood.repository;
+
+import org.springframework.stereotype.Repository;
+
+
+public interface OrderRespository {
+
+}

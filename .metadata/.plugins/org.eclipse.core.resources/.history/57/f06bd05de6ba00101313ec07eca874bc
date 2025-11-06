@@ -1,0 +1,91 @@
+package com.zozofood.service;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.config.JwtUtil;
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.AuthRespDto;
+import com.zozofood.dto.LoginReqto;
+import com.zozofood.dto.RegesterReqDto;
+import com.zozofood.dto.RegesterRespDto;
+import com.zozofood.entity.Role;
+import com.zozofood.entity.User;
+import com.zozofood.exceprion.AuthException;
+import com.zozofood.exceprion.UserNotFoundException;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class AuthServiceImp implements AuthService {
+
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtUtil jwtutil;
+
+	public AuthServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder,
+			AuthenticationManager authenticationManager, JwtUtil jwtutil) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.authenticationManager = authenticationManager;
+		this.jwtutil = jwtutil;
+	}
+
+	@Override
+	public AuthRespDto authenticateUser(LoginReqto loginReqto) {
+
+		try {
+			Authentication authenticate = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginReqto.getUsername(), loginReqto.getPassword()));
+
+			UserDetails principal = (UserDetails) authenticate.getPrincipal();
+			String token = jwtutil.generateToken(principal.getUsername());
+			return new AuthRespDto(token);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new AuthException("Invalid username or password");
+		}
+
+	}
+
+	@Override
+	public RegesterRespDto registerUser(RegesterReqDto registerReqto) {
+		validateNewUser(registerReqto);
+		 User newUser = createNewUser(registerReqto);
+	        userRepository.save(newUser);
+	        
+	        log.info("User {} registered successfully", registerReqto.getUserName());
+	        return new RegesterRespDto("User registered successfully");
+	}
+	
+
+	private User createNewUser(RegesterReqDto registerReqto) {
+		 User user = new User();
+	        user.setUsername(registerReqto.getUserName());
+	        user.setEmail(registerReqto.getEmail());
+	        user.setPassword(passwordEncoder.encode(registerReqto.getPassword()));
+	        user.getRoles().add(Role.ROLE_USER.name());
+	        user.isActive();
+	        return user;
+		
+	}
+
+	private void validateNewUser(RegesterReqDto registerReqto) {
+		  if (userRepository.findByUsernameAndIsActiveTrue(registerReqto.getUserName()).isPresent()) {
+	            throw new UserNotFoundException("Username is already taken");
+	        }
+	        if (userRepository.findByEmailAndIsActiveTrue(registerReqto.getEmail()).isPresent()) {
+	            throw new UserNotFoundException("Email is already in use");
+	        }
+		
+	}
+
+	
+
+}

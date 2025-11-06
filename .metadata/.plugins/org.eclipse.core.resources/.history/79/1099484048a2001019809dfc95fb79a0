@@ -1,0 +1,9 @@
+package com.zozofood.dao;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zozofood.entity.Restaurant;
+
+public interface RestaurantDAO extends JpaRepository<Restaurant, Long> {
+
+}

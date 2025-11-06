@@ -1,0 +1,26 @@
+1760243611623	Rename type 'RestaurantDtoRequest'
+1760244057054	Rename type 'RestaurantResponseDto'
+1760244072258	Rename type 'RestaurantRequestDto'
+1760244661150	Rename type 'AddressRersponseDto'
+1760247421329	Delete element
+1760249919906	Rename type 'RestaurnantService'
+1760250317873	Delete element
+1760250883908	Delete element
+1760250913349	Rename type 'RestauranCreationtRequestDto'
+1760251045471	Delete element
+1760251378248	Rename type 'RestaurantCreationResponseBuilder'
+1760252161796	Rename type 'RestaurantCreationtRequestDto'
+1760254379144	Delete element
+1760257645128	Rename type 'RestaurnantServiceImp'
+1760258264307	Rename package 'com.zozofood.application'
+1760279124660	Rename type 'itemResponseDto'
+1760310873689	Rename type 'ItemRersponseBuilder'
+1760310904837	Rename method 'buildItemRespFromItemResponseDto'
+1760311027878	Rename method 'BuildRestaurantFromRestaurantCreationRequestDto'
+1760311632775	Rename type 'ItemResponseMapper'
+1760311680091	Rename method 'mapToItemResponseDtoList'
+1760311689826	Rename method 'itemRespBuilderFromItemResponseDtot'
+1760317423680	Rename method 'addItemByRestaurantId'
+1760318905890	Rename method 'findByItemNameAndRestaurantId'
+1760399268566	Rename type 'RestaurnatResponseDTO'
+1760399806567	Rename method 'buildAddressFromAddressRequestDto'

@@ -1,0 +1,75 @@
+package com.zozofood.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.builder.RestaurantCreationBuilder;
+import com.zozofood.builder.RestaurantResponseBuilder;
+import com.zozofood.dao.RestaurantRepository;
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.dto.RestaurantResponseDTO;
+import com.zozofood.exception.RestaurantNotFoundException;
+import com.zozofood.model.Restaurant;
+
+@Service
+public class RestaurnatServiceImp implements RestaurantService {
+
+	private final RestaurantRepository restaurantRepository;
+
+
+	public RestaurnatServiceImp(RestaurantRepository restaurantRepository) {
+		this.restaurantRepository = restaurantRepository;
+	}
+
+	@Override
+	public RestaurantCreationResponseDto createRestaurant(RestaurantCreationRequestDto restaurantCreationRequestDto) {
+		Restaurant savedRestaurant = restaurantRepository.save(RestaurantCreationBuilder
+				.buildRestaurantFromRestaurantCreationRequestDto(restaurantCreationRequestDto));
+
+		return new RestaurantCreationResponseDto(savedRestaurant.getRestaurantId(),
+				savedRestaurant.getRestaurantName());
+	}
+
+	@Override
+	public RestaurantResponseDTO getRestaurantById(Long restaurantId) {
+
+		Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+				() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+		return RestaurantResponseBuilder.restaurantRespFromRestaurant(restaurant);
+
+	}
+
+	@Override
+	public Page<RestaurantResponseDTO> searchRestaurants(String keyword, PageRequest pagination) {
+
+		Page<Restaurant> searchRestaurantsByKeyword;
+
+		if (keyword == null || keyword.isEmpty()) {
+			keyword = "";
+		}
+		
+		searchRestaurantsByKeyword = restaurantRepository.searchRestaurantsByKeyword(keyword, pagination);
+		
+		Page<RestaurantResponseDTO> restaurantResponseDTOList = searchRestaurantsByKeyword.map(restaurant -> 
+		    RestaurantResponseBuilder.restaurantRespFromRestaurant(restaurant)
+		);
+		
+		return restaurantResponseDTOList;
+		
+		
+	}
+
+	@Override
+	public Page<RestaurantResponseDTO> getRestaurantsByPagination(PageRequest pagination) {
+		Page<Restaurant> allRestaurantByPage = restaurantRepository.findAll(pagination);
+		
+		
+		
+//		allRestaurantByPage.map(restaurant -> RestaurantResponseBuilder.restaurantRespFromRestaurant(allRestaurantByPage));
+				return null;
+	}
+
+}

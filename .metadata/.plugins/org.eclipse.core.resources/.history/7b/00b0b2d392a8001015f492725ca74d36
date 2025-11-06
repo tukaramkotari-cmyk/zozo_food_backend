@@ -1,0 +1,31 @@
+package com.zozofood.builder;
+
+import org.springframework.beans.BeanUtils;
+
+import com.zozofood.dto.AddressResponseDto;
+import com.zozofood.dto.RestaurantResponseDTO;
+import com.zozofood.model.Address;
+import com.zozofood.model.Restaurant;
+
+public class RestaurantResponseBuilder {
+	
+	public static RestaurantResponseDTO restaurantRespFromRestaurant(Restaurant restaurant) {
+		return RestaurantResponseDTO.builder()
+				.restaurantId(restaurant.getRestaurantId())
+				.restaurantName(restaurant.getRestaurantName())
+				.addressresponseDto(buildAddressRespDTO(restaurant.getRestaurantAddress()))
+				.restaurantPhone(restaurant.getRestaurantPhone())
+				.restaurantEmail(restaurant.getRestaurantEmail())
+				
+	}
+	
+	
+	
+		private static AddressResponseDto buildAddressRespDTO(Address address) {
+			AddressResponseDto addressResponseDto = new AddressResponseDto();
+			BeanUtils.copyProperties(address, addressResponseDto);
+			return addressResponseDto;
+		}
+	
+
+}

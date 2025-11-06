@@ -1,0 +1,48 @@
+package com.zozofood.service;
+
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+
+import com.zozofood.builder.UserBuilder;
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.UserRequestDto;
+import com.zozofood.dto.UserResponseDto;
+import com.zozofood.entity.User;
+import com.zozofood.exceprion.UserAlreadyExistException;
+
+@Service
+public class UserServiceImp implements UserService {
+
+	private final UserRepository userRepository;
+
+	public UserServiceImp(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	@Override
+	public UserResponseDto createUser(UserRequestDto userRequestDto) {
+
+		validateNewUser(userRequestDto);
+
+		User user = UserBuilder.toUserEntity(userRequestDto);
+		user.setActive(true);
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			user.setRoles(Set.of("ROLE_USER"));
+		}
+
+		userRepository.save(user);
+		return UserBuilder.toUserResponseDto(user);
+
+	}
+
+	private void validateNewUser(UserRequestDto userRequestDto) {
+		 if (userRepository.findByUsernameAndIsActiveTrue(userRequestDto.getUserName()).isPresent()) {
+	            throw new UserAlreadyExistException("Username is already taken");
+	        }
+	        if (userRepository.findByUsernameAndIsActiveTrue(userRequestDto.getEmail()).isPresent()) {
+	            throw new UserAlreadyExistException("Email is already in use");
+	        }
+	}
+
+}

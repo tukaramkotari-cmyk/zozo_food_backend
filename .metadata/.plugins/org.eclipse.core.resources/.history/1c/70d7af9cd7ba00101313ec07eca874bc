@@ -1,0 +1,51 @@
+package com.zozofood.service;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.config.JwtUtil;
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.AuthRespDto;
+import com.zozofood.dto.LoginReqto;
+
+@Service
+public class AuthServiceImp implements AuthService {
+	
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtUtil jwtService;
+	
+	public AuthServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder,
+			AuthenticationManager authenticationManager, JwtUtil jwtutil) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtutil;
+	}
+	
+	@Override
+	public AuthRespDto authenticateUser(LoginReqto loginReqto) {
+		
+		try {
+			Authentication authenticate = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(
+							loginReqto.getUsername(), loginReqto.getPassword()));
+			
+			UserDetails principal = (UserDetails)authenticate.getPrincipal();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		
+		
+		return null;
+	} 
+
+}

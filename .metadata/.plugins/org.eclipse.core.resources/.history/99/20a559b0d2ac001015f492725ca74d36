@@ -1,0 +1,15 @@
+package com.zozofood.dao;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zozofood.model.Restaurant;
+
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+
+	Optional<Restaurant> findByRestaurantId(Long restaurantId);
+
+	Optional<Restaurant> findItemsByRestaurantId(Long restaurantId);
+
+}

@@ -1,0 +1,7 @@
+package com.zozofood.service;
+
+
+
+public interface ItemService {
+
+}

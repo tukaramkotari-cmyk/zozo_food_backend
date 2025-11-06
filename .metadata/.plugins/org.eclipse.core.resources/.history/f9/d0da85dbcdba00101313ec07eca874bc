@@ -1,0 +1,26 @@
+package com.zozofood.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.zozofood.dao.UserRepository;
+
+@Configuration
+public class SecurityConfig {
+	
+	
+	private final UserRepository userRepository;
+	
+	public SecurityConfig(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+	
+	 @Bean
+	    public PasswordEncoder passwordEncoder() {
+	        return new BCryptPasswordEncoder();
+	    }
+
+
+}

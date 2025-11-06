@@ -1,0 +1,39 @@
+package com.zozofood.service;
+
+import java.util.List;
+
+import com.zozofood.dao.ItemRepository;
+import com.zozofood.dao.RestaurantRepository;
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.model.Restaurant;
+
+public class ItemServiceImp implements ItemService {
+	
+	private final ItemRepository itemRepository;
+	private final RestaurantRepository restaurantRepository;
+	
+	public ItemServiceImp(ItemRepository itemRepository, RestaurantRepository restaurantRepository) {
+		this.itemRepository = itemRepository;
+		this.restaurantRepository = restaurantRepository;
+	}
+	
+	@Override
+	public List<ItemResponseDto> getItemsByRestaurantId(Long restaurantId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addItemByRestaurantId(Long restaurantId, List<CreateItemRequestDTO> itemRequestDtoList) {
+		Restaurant restarunatexist = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+		if(restarunatexist != null) {
+			 itemRepository.saveAll(itemRequestDtoList);
+		}
+	}
+
+}
+	
+
+
+	

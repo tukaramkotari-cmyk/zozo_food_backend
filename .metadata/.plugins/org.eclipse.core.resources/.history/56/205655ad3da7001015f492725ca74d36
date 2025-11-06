@@ -1,0 +1,28 @@
+package com.zozofood.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class RestaurantResponseDto {
+	
+//	private Long id;
+//	
+//	private String restaurantName;
+//	
+//	private String restaurantDescription;
+//	
+//	private String restaurantContact;
+//	
+//	private String restaurantEmail;
+//	
+//	private AddressResponseDto address;
+//	
+	// You can include other fields as necessary
+
+}

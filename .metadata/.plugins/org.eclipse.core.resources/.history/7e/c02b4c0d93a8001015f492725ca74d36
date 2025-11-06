@@ -1,0 +1,52 @@
+package com.zozofood.builder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+
+import com.zozofood.dto.AddressResponseDto;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.dto.RestaurantResponseDTO;
+import com.zozofood.model.Address;
+import com.zozofood.model.Item;
+import com.zozofood.model.Restaurant;
+
+public class RestaurantResponseBuilder {
+	
+	public static RestaurantResponseDTO restaurantRespFromRestaurant(Restaurant restaurant) {
+		return RestaurantResponseDTO.builder()
+				.restaurantId(restaurant.getRestaurantId())
+				.restaurantName(restaurant.getRestaurantName())
+				.addressResponseDto(buildAddressRespDTO(restaurant.getRestaurantAddress()))
+				.restaurantPhone(restaurant.getRestaurantPhone())
+				.restaurantEmail(restaurant.getRestaurantEmail())
+				.restaurantOpeningHours(restaurant.getRestaurantOpeningHours())
+				.restaurantRating(restaurant.getRestaurantRating())
+				.restaurantstatus(restaurant.isRestaurantIsOpen() ? "Open" : "Closed")
+				.restaurantMenu(buildItemRespDTOList(restaurant.getRestaurantMenu()))
+				.build();
+				
+	}
+	
+	
+	
+		private static AddressResponseDto buildAddressRespDTO(Address address) {
+			AddressResponseDto addressResponseDto = new AddressResponseDto();
+			BeanUtils.copyProperties(address, addressResponseDto);
+			return addressResponseDto;
+		}
+		
+		private static List<ItemResponseDto> buildItemRespDTOList(List<Item> items){
+			
+			List<ItemResponseDto> itemResponseDtoList = new ArrayList<>(); 
+			for(Item item : items) {
+				ItemResponseDto itemResponseDto = new ItemResponseDto();
+				BeanUtils.copyProperties(item, itemResponseDto);
+				itemResponseDtoList.add(itemResponseDto);
+			}
+			return itemResponseDtoList;
+		}
+	
+
+}

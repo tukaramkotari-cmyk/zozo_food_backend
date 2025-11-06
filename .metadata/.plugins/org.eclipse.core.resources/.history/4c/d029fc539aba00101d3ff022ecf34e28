@@ -1,0 +1,32 @@
+package com.zozofood.dao;
+
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.zozofood.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+	Optional<User> findByUsernameAndIsActiveTrue(String userName);
+
+	Optional<User> findByEmailAndIsActiveTrue(String email); //findByEmailAndIsActiveTrue
+	
+	Optional<User> findByUserIdandIsActiveTrue(Long id);
+
+	
+	Page<User> findByIsActiveTrue(PageRequest pageable);
+
+	boolean existsByUsernameAndIsActiveTrue(String userName);
+
+	boolean existsByEmailAndIsActiveTrue(String email);
+
+	
+
+	void deleteByUserId(Long id);
+
+	
+
+}

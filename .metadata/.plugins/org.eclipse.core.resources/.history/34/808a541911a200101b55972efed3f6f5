@@ -1,0 +1,26 @@
+package com.zozofood.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "address")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Address {
+	
+	private String street;
+	
+	private String city;
+	
+	private String state;
+	
+	private String zipCode;
+	
+	private String country;
+
+}

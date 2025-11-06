@@ -1,0 +1,37 @@
+package com.zozofood.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.service.RestaurantService;
+
+@RestController
+@RequestMapping("/restaurant")
+public class RestaurantController {
+	
+	
+	private final RestaurantService restaurantService;
+	
+	public RestaurantController(RestaurantService restaurantService) {
+		this.restaurantService = restaurantService;
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<RestaurantCreationResponseDto> addRestaurant(@RequestBody RestaurantCreationRequestDto restaurantCreationRequestDto) {
+		
+		RestaurantCreationResponseDto restaurantCreationResponse = restaurantService.createRestaurant(restaurantCreationRequestDto);
+		
+//		return restaurantCreationResponse;
+		return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCreationResponse);
+		
+	}
+	
+	
+
+}

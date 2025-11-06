@@ -1,0 +1,87 @@
+package com.zozofood.service;
+
+import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import com.zozofood.builder.ItemResponseBuilder;
+import com.zozofood.dao.ItemRepository;
+import com.zozofood.dao.RestaurantRepository;
+import com.zozofood.dto.CreateItemRequestDTO;
+import com.zozofood.dto.ItemResponseDto;
+import com.zozofood.exception.ItemNotFoundException;
+import com.zozofood.exception.RestaurantNotFoundException;
+import com.zozofood.model.Item;
+import com.zozofood.model.Restaurant;
+
+@Service
+public class ItemServiceImp implements ItemService {
+
+	private final ItemRepository itemRepository;
+	private final RestaurantRepository restaurantRepository;
+
+	public ItemServiceImp(ItemRepository itemRepository, RestaurantRepository restaurantRepository) {
+		this.itemRepository = itemRepository;
+		this.restaurantRepository = restaurantRepository;
+	}
+
+	@Override
+	public List<ItemResponseDto> getItemsByRestaurantId(Long restaurantId) {
+		  Optional<List<Item>> restaurantItemList = itemRepository.findByRestaurant_RestaurantId(restaurantId);
+		 
+		 if(restaurantItemList.isPresent() && !restaurantItemList.get().isEmpty()) {
+			 
+			 return ItemResponseBuilder.itemRespBuilderFromItemResponseDto(restaurantItemList.get());
+		 }
+		 else {
+			 throw new RestaurantNotFoundException("No items found for restaurant with id " + restaurantId);
+		 }
+		
+	}
+
+	@Override
+	public Map<String, String> createItemByRestaurantId(Long restaurantId, List<CreateItemRequestDTO> itemRequestDtoList) {
+
+		Map<String, String> itemStatusMap = new LinkedHashMap<>();
+		boolean anyInserted = false;
+
+		Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+				() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found"));
+
+		if (restaurant != null) {
+			
+			for (CreateItemRequestDTO itemRequestDto : itemRequestDtoList) {
+
+				Optional<Item> findByItemNameAndRestaurantId = itemRepository
+						.findByItemNameAndRestaurant_RestaurantId(itemRequestDto.getItemName(), restaurantId);
+
+				if (findByItemNameAndRestaurantId.isEmpty() || findByItemNameAndRestaurantId == null) {
+					Item item = new Item();
+					BeanUtils.copyProperties(itemRequestDto, item);
+					item.setRestaurant(restaurant);
+					itemRepository.save(item);
+					itemStatusMap.put(itemRequestDto.getItemName(), "Item added successfully");
+					anyInserted = true;
+				} else {
+					itemStatusMap.put(itemRequestDto.getItemName(), "Item already exists in Menu");
+				}
+
+			}
+
+		}
+		itemStatusMap.put("_inserted", String.valueOf(anyInserted));
+		return itemStatusMap;
+	}
+
+	@Override
+	public double getItemPriceById(Long itemid) {
+		Item item = itemRepository.findById(itemid).orElseThrow(() -> new ItemNotFoundException("Item with id " + itemid + " not found"));
+		return item.getItemPrice().doubleValue();
+	}
+
+}

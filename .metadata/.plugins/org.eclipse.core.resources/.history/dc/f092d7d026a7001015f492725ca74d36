@@ -1,0 +1,9 @@
+package com.zozofood.dto;
+
+public class RestaurantCreationResponseDto {
+	
+	private long restaurantId;
+	
+	private String restaurantName;
+
+}

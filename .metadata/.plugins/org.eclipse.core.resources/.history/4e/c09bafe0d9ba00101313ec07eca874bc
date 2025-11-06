@@ -1,0 +1,10 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.AuthRespDto;
+import com.zozofood.dto.LoginReqto;
+
+public interface AuthService {
+
+	AuthRespDto authenticateUser(LoginReqto loginReqto);
+
+}

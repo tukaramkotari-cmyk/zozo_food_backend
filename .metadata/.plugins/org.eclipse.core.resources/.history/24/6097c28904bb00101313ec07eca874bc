@@ -1,0 +1,9 @@
+package com.zozofood.exception;
+
+public class OrderNotFoundEcxeption extends RuntimeException {
+
+	public OrderNotFoundEcxeption(String message) {
+		super(message);
+	}
+
+}

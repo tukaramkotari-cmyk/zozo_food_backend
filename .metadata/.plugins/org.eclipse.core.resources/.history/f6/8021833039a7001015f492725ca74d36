@@ -1,0 +1,27 @@
+package com.zozofood.service;
+
+import org.springframework.stereotype.Service;
+
+import com.zozofood.dao.RestaurantRepository;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+import com.zozofood.model.Restaurant;
+
+@Service
+public class RestaurnantServiceImp implements RestaurantService {
+	
+	private final RestaurantRepository restaurantRepository;
+
+	public RestaurnantServiceImp(RestaurantRepository restaurantRepository) {
+		this.restaurantRepository = restaurantRepository;
+	}
+
+	@Override
+	public RestaurantCreationResponseDto createRestaurant(Restaurant restaurant) {
+		
+		return null;
+	}
+
+	
+	
+	
+}

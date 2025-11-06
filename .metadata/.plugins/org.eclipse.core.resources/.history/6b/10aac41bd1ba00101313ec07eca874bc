@@ -1,0 +1,8 @@
+package com.zozofood.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthServiceImp implements AuthServiceImp {
+
+}

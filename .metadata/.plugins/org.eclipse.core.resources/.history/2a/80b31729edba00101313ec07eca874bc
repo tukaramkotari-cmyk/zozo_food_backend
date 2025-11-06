@@ -1,0 +1,27 @@
+package com.zozofood.builder;
+
+import java.time.LocalDateTime;
+
+import com.zozofood.dto.OrderRequestDto;
+import com.zozofood.entity.Order;
+
+public class OrderBuilder {
+	
+	
+	public static Order toOrderEntity(OrderRequestDto orderRequest) {
+		  Order order = Order.builder()
+		            .userId(orderRequest.getUserId())
+		            .status(Order.OrderStatus.PENDING)
+		            .paymentStatus(Order.PaymentStatus.PENDING)
+		            .orderDate(LocalDateTime.now())
+		            .recipientName(orderRequest.getRecipientName())
+		            .contactEmail(orderRequest.getContactEmail())
+		            .shippingAddress(orderRequest.getShippingAddress())
+		            .contactPhone(orderRequest.getContactPhone())
+		            .orderItems(orderItems)
+		            .totalAmount(subtotal.add(tax))
+		            .build();
+
+	}
+
+}

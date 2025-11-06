@@ -1,0 +1,31 @@
+package com.zozofood.dto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderResponseDto {
+
+	private Long orderId;
+
+	private Long userId;
+
+	private String recipientName;
+	private String contactphone;
+
+	private String orderStatus;
+	private LocalDateTime orderDate;
+	private double totalAmount;
+	
+	private String paymentStatus;
+
+	private String deliveryAddress;
+	private String restaurantName;  //added new
+	private List<OrderItemResponseDto> orderItems;
+}

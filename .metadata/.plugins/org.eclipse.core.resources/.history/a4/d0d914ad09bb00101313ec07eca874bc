@@ -1,0 +1,6 @@
+package com.zozofood.client;
+
+@FeignClient(name = "RESTAURANT-SERVICE")
+public interface RestaurantClient {
+
+}

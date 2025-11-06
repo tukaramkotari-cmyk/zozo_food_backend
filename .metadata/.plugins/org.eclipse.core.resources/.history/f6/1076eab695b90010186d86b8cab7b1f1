@@ -1,0 +1,5 @@
+package com.zozofood.service;
+
+public class UserServiceImp implements UserService {
+
+}

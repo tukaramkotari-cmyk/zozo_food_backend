@@ -1,0 +1,11 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.RestaurantCreationRequestDto;
+import com.zozofood.dto.RestaurantCreationResponseDto;
+
+
+public interface RestaurantService {
+	
+	RestaurantCreationResponseDto createRestaurant(RestaurantCreationRequestDto restaurantCreationRequestDto);
+
+}

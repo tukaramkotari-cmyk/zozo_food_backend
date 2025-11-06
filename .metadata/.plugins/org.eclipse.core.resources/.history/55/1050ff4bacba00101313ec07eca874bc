@@ -1,0 +1,11 @@
+package com.zozofood.service;
+
+import com.zozofood.dto.ProfileResponseDto;
+
+public interface ProfileService {
+
+	ProfileResponseDto getUserProfile(long userId);
+
+
+
+}

@@ -1,0 +1,32 @@
+package com.zozofood.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class RestaurnatResponseDTO {
+	
+	private Long id;
+	
+	private String restaurantName;
+	
+	private AddressResponseDto restaurantAddress;
+	
+	private String restaurantPhone;
+	
+	private String restaurantEmail;
+		
+	private String restaurantOpeningHours;
+	
+	private double restaurantRating;
+	
+	private String restaurantStatus;
+	
+	private list<ItemResponseDto> restaurantMenu;
+
+}

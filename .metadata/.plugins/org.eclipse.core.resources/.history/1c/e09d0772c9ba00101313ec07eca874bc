@@ -1,0 +1,72 @@
+package com.zozofood.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.zozofood.builder.ProfileBuilder;
+import com.zozofood.dao.UserRepository;
+import com.zozofood.dto.ProfileRespWithTokenDto;
+import com.zozofood.dto.ProfileResponseDto;
+import com.zozofood.dto.ProfileUpdateReqDto;
+import com.zozofood.entity.User;
+import com.zozofood.exceprion.UserNotFoundException;
+
+import jakarta.validation.Valid;
+
+@Service
+public class ProfileServiceImp implements ProfileService {
+	
+	private final UserRepository userRepository;
+	
+	
+	public ProfileServiceImp(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	@Override
+	public ProfileResponseDto getUserProfile(long userId) {
+		 User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with id: "+userId));
+		return ProfileBuilder.toProfileResponseDto(user);
+	}
+
+	@Override
+	public ProfileRespWithTokenDto updateUserProfile(long userId, @Valid @RequestBody ProfileUpdateReqDto profileUpdateReqDto) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with id: "+userId));
+		
+		boolean usernameChanged  = !user.getUsername().equals(profileUpdateReqDto.getUsername());
+		
+		validateProfileUpdate(user, profileUpdateReqDto, usernameChanged);
+		
+		user.setUsername(profileUpdateReqDto.getUsername());
+		user.setEmail(profileUpdateReqDto.getEmail());
+		user.setAddress(profileUpdateReqDto.getAddress());
+		
+		User updateUser = userRepository.save(user);
+		
+		return ProfileBuilder.toProfileRespWithTokenDto(updateUser, usernameChanged);
+		
+	}
+
+	private void validateProfileUpdate(User user, @Valid ProfileUpdateReqDto profileUpdateReqDto,
+			boolean usernameChanged) {
+		 if (usernameChanged && userRepository.existsByUsername(profileUpdateReqDto.getUsername())) {
+	            throw new IllegalArgumentException("Username already taken");
+	        }
+
+	        if (!user.getEmail().equals(profileUpdateReqDto.getEmail()) &&
+	                userRepository.existsByEmail(profileUpdateReqDto.getEmail())) {
+	            throw new IllegalArgumentException("Email already taken");
+	        }
+	    }
+		
+	public static ProfileRespWithTokenDto toProfileRespWithTokenDto(User user, boolean namechanged) {
+		ProfileResponseDto profile = ProfileBuilder.toProfileResponseDto(user);
+		return ProfileRespWithTokenDto.builder()
+				.profile(profile)
+				.newJWTToken(namechanged ? jwtUtil.generateToken(user.getUsername()) : null)
+				.build();
+	}
+	
+	
+
+}

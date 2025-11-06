@@ -1,0 +1,13 @@
+package com.zozofood.builder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class UserBuilder {
+
+	private final PasswordEncoder passwordencoder;
+	
+	
+}

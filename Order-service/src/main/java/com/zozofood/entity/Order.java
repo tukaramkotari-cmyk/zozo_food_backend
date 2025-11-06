@@ -1,0 +1,77 @@
+package com.zozofood.entity;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "orders")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Order {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long orderId;
+
+	private Long userId;
+
+	private Long restaurantId;
+
+	private LocalDateTime orderDate;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false, length = 20)
+	private OrderStatus status;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "payment_status", nullable = false, length = 20)
+	private PaymentStatus paymentStatus;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+	private List<OrderItems> OrderItemList;
+
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted = false;
+
+	@Column(name = "recipient_name", length = 50)
+	private String recipientName;
+
+	@Column(name = "contact_email", length = 50)
+	private String contactEmail;
+
+	@Column(name = "shipping_address", length = 255)
+	private String shippingAddress;
+
+	@Column(name = "contact_phone", length = 20)
+	private String contactPhone;
+
+	private int totalItems;
+
+	private BigDecimal TotalAmount;
+
+	public enum OrderStatus {
+		PENDING, PREPARING, READY, DELIVERED, CANCELLED
+	}
+
+	public enum PaymentStatus {
+		PENDING, PAID, FAILED, REFUNDED
+	}
+
+}

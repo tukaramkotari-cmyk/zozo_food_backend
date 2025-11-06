@@ -1,0 +1,16 @@
+package com.zozofood.service;
+
+import org.springframework.stereotype.Service;
+
+import com.zozofood.dao.RestaurantRepository;
+
+@Service
+public class RestaurnantServiceImp implements RestaurantService {
+	
+	private final RestaurantRepository restaurantRepository;
+
+	public RestaurnantServiceImp(RestaurantRepository restaurantRepository) {
+		this.restaurantRepository = restaurantRepository;
+	}
+
+}

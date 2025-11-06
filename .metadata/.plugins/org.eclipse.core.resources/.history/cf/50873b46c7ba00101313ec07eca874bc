@@ -1,0 +1,27 @@
+package com.zozofood.builder;
+
+import com.zozofood.dto.ProfileRespWithTokenDto;
+import com.zozofood.dto.ProfileResponseDto;
+import com.zozofood.entity.User;
+
+public class ProfileBuilder {
+	
+	private static final JwtUtil jwtUtil = new JwtUtil();
+
+	
+	public static ProfileResponseDto toProfileResponseDto(User user) {
+		return ProfileResponseDto.builder()
+				.username(user.getUsername())
+				.email(user.getEmail())
+				.address(user.getAddress())
+				.build();
+	}
+	
+	public static ProfileRespWithTokenDto toProfileRespWithTokenDto(User user, boolean namechanged) {
+		ProfileResponseDto profile = toProfileResponseDto(user);
+		return ProfileRespWithTokenDto.builder()
+				.profile(profile)
+				.newJWTToken(namechanged ? jwtUtil.generateToken(user) : null)
+				.build();
+	}
+}
